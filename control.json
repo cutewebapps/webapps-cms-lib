@@ -1,0 +1,9 @@
+{
+    "name"    : "webapps-cms-lib",
+    "version" : "0.3.0",
+    "classes" : [ "Cms" ],
+    "deps"    : [ 
+        "webapps-framework-lib",
+        "webapps-user-lib" 
+    ]
+}
