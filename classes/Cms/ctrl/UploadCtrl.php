@@ -27,7 +27,7 @@ class Cms_UploadCtrl extends App_AbstractCtrl
         if ( is_object( App_Application::getInstance()->getConfig()->cdn ) ) {
             $arrDirectories = App_Application::getInstance()->getConfig()->cdn->toArray();
         } else {
-            $arrDirectories = array( '' => WC_APPLICATION_DIR . '/cdn/upload' );
+            $arrDirectories = array( '' => CWA_APPLICATION_DIR . '/cdn/upload' );
         }
 
         $strDestination = $this->_getParam( 'destination', '' );
@@ -106,7 +106,7 @@ class Cms_UploadCtrl extends App_AbstractCtrl
 
                 move_uploaded_file(
                     $_FILES[ 'upload'.$i ][ 'tmp_name' ],
-                    WC_APPLICATION_DIR.'/cdn/upload/'.$strName
+                    CWA_APPLICATION_DIR.'/cdn/upload/'.$strName
                 );
             }
         }
@@ -116,7 +116,7 @@ class Cms_UploadCtrl extends App_AbstractCtrl
     {
         $strName = $this->_getParam( 'name' );
         if ( $strName != '' && !strstr( $strName, '..' ) ) {
-            $strFullPath = WC_APPLICATION_DIR . '/cdn/upload/'.$strName;
+            $strFullPath = CWA_APPLICATION_DIR . '/cdn/upload/'.$strName;
             if ( file_exists( $strFullPath ) ) {
             unlink( $strFullPath );
             }
