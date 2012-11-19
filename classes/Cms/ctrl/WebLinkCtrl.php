@@ -35,7 +35,7 @@ class Cms_WebLinkCtrl extends App_DbTableCtrl
 		}
 		move_uploaded_file(
 			$_FILES[ 'upload'.$i ][ 'tmp_name' ],
-			str_replace( '//', '/', WC_APPLICATION_DIR.'/cdn/upload/'.$strFileName)
+			str_replace( '//', '/', CWA_APPLICATION_DIR.'/cdn/upload/'.$strFileName)
 		);
 
                 $weblink = Cms_WebLink::Table()->createRow();
