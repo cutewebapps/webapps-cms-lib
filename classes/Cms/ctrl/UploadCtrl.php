@@ -27,7 +27,7 @@ class Cms_UploadCtrl extends App_AbstractCtrl
         if ( is_object( App_Application::getInstance()->getConfig()->cdn ) ) {
             $arrDirectories = App_Application::getInstance()->getConfig()->cdn->toArray();
         } else {
-            $arrDirectories = array( '' => WC_APPLICATION_DIR . '/cdn/upload' );
+            $arrDirectories = array( '' => CWA_APPLICATION_DIR . '/cdn/upload' );
         }
 
         $strDestination = $this->_getParam( 'destination', '' );
