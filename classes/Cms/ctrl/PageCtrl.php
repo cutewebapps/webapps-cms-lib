@@ -109,7 +109,7 @@ class Cms_PageCtrl extends App_DbTableCtrl
         }
 
         if ( !is_object( $this->view->object )  )
-            throw new App_PageNotFound_Exception ( 'Page Not Found' );
+            throw new App_Exception_PageNotFound ( 'Page Not Found' );
 
         // page can have subpages, pages for comments, pages for images, etc ...
         $this->view->page = $this->_getParam( 'page', 1 );
