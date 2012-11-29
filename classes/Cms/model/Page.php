@@ -9,12 +9,14 @@ class Cms_Page_Table extends DBx_Table
     protected $_primary = 'pg_id';
 
     /** @return Cms_Page */
-    public function findBySlug( $strSlug, $strLang = '' )
+    public function findBySlug( $strSlug, $strLang = '', $strTypeId = '' )
     {
         $select = $this->select()
             ->where( 'pg_slug = ? ', $strSlug );
         if ( $strLang != '' )
             $select->where( 'pg_lang = ? ', $strLang );
+        if ( $strTypeId !== '' )
+            $select->where( 'pg_type_id = ? ', $strTypeId );
         return $this->fetchRow( $select );
     }
 
