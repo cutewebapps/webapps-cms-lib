@@ -12,7 +12,8 @@ class Cms_Category_Relation_Form_Filter extends App_Form_Filter
 {
     public function createElements()
     {
-        parent::createElements();
+        $this->allowFiltering(array( "pgcat_cat_id", "pgcat_page_id", "pgcat_active" ) );
+        //parent::createElements();
     }
 }
 
@@ -20,7 +21,8 @@ class Cms_Category_Relation_Form_Edit extends App_Form_Edit
 {
     public function createElements()
     {
-        parent::createElements();
+        $this->allowEditing(array( "pgcat_cat_id", "pgcat_page_id", "pgcat_active" ) );
+        //parent::createElements();
         // $elemPageId = new App_Form_Element( 'pg_content', 'text' );
         // $this->addElement( $elemPageId );
     }
