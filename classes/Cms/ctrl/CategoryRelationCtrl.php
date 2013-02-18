@@ -2,7 +2,7 @@
 
 class Cms_CategoryRelationCtrl extends App_DbTableCtrl
 {
-    public function getClassName() {
+    public function  getClassName() {
         return 'Cms_Category_Relation';
     }
 
@@ -119,4 +119,22 @@ class Cms_CategoryRelationCtrl extends App_DbTableCtrl
             }
         }
     //}
+        
+    public function setOrderAction()
+    {
+        $strIds = $this->_getParam( 'order' );
+        $tblDealProd = Cms_Category_Relation::Table();
+        $nIterator = 0;
+
+        foreach ( explode( '|', $strIds ) as $nId ) {
+            $objDealProd = $tblDealProd->find( $nId )->current();
+            if ( is_object( $objDealProd )) {
+                $objDealProd->pgcat_sort_order = $nIterator;
+                $objDealProd->save();
+                $nIterator ++;
+            }
+        }
+        $this->view->affected = $nIterator;
+        $this->view->return = $this->_getParam( 'return' );
+    }
 }

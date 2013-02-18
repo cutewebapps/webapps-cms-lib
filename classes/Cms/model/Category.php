@@ -114,6 +114,30 @@ class Cms_Category extends DBx_Table_Row
     {
         return $this->getJoinedObject( Cms_Page::Table(), 'pg_id', 'cat_page_id' );
     }
+    public function getPages()
+    {
+        $selectRelation  = Cms_Category::Table()->select()
+            ->setIntegrityCheck( false )
+            ->joinInner( Cms_Category_Relation::TableName(), 'pgcat_cat_id = cat_id' )
+            ->joinInner( Cms_Page::TableName(), 'pg_id = pgcat_page_id' )
+            ->where( 'pgcat_cat_id = ?', $this->getId() )
+            ->order('pgcat_sort_order');
+        return Cms_Category_Relation::Table()->fetchAll($selectRelation);
+    }
+    public function getCountPages()
+    {
+        $total = 0;
+        $selectRelation  = Cms_Category::Table()->select()
+            ->setIntegrityCheck( false )
+            ->joinInner( Cms_Category_Relation::TableName(), 'pgcat_cat_id = cat_id' )
+            ->joinInner( Cms_Page::TableName(), 'pg_id = pgcat_page_id' )
+            ->where( 'pgcat_cat_id = ?', $this->getId() )
+            ->order('pgcat_sort_order');
+        foreach ( Cms_Category_Relation::Table()->fetchAll($selectRelation) as $objRelation ) {
+            $total++;
+        }
+        return $total;
+    }
 
     public function getSortOrder()
     {
