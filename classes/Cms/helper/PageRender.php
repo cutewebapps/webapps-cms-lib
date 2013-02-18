@@ -9,7 +9,9 @@ class Cms_PageRenderHelper extends App_ViewHelper_Abstract
     public function pageRender( $strSlug, $strLang = '' )
     {
         $objPage = null;
-        if ( $strSlug == '' ) {
+        if ( $strSlug instanceof  Cms_Page ) {
+            $objPage = $strSlug;
+        } else if ( $strSlug == '' ) {
             $objPage = $this->getView()->object;
         } else {
             $objPage = Cms_Page::Table()->findBySlug( $strSlug, $strLang);
