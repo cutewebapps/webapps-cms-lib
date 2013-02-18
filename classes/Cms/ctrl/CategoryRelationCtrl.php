@@ -2,9 +2,9 @@
 
 class Cms_CategoryRelationCtrl extends App_DbTableCtrl
 {
-    //public function  getClassName() {
-    //    return 'Cms_CategoryRelation';
-   // }
+    public function getClassName() {
+        return 'Cms_Category_Relation';
+    }
 
     //TODO: this function should understand TYPE parameter!!!
     public function updatePageAction()
