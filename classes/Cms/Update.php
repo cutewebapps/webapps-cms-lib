@@ -21,7 +21,9 @@ class Cms_Update extends App_Update
     }
     
     public function update() {
+
         $this->_install();
+
         if ($this->isVersionBelow('0.1.2')) {
             $tblPage = Cms_Page::Table();
             if ( !$tblPage->hasColumn( 'pg_type_sortorder' ) ) {
@@ -57,12 +59,15 @@ class Cms_Update extends App_Update
                 $tblComments->addColumn(  'pgc_author_url', 'VARCHAR(255) DEFAULT 0 NOT NULL');
             }
         }
+
+
         if ( $this->isVersionBelow('0.1.5') ) {
             $tblPage = Cms_Page::Table();
             if ( !$tblPage->hasColumn( 'pg_brief' ) ) {
-                $tblPage->addColumn(  'pg_brief','MEDIUMTEXT DEFAULT \'\' NOT NULL');
+                $tblPage->addColumn(  'pg_brief','MEDIUMTEXT NOT NULL');
             }
         }
+
         if ( $this->isVersionBelow('0.1.6') ) {
             $tblPage = Cms_Page::Table();
             if ( !$tblPage->hasColumn( 'pg_comment_allow' ) ) {
@@ -81,6 +86,7 @@ class Cms_Update extends App_Update
                 $tblPage->addColumn(  'pg_image', 'VARCHAR(200) DEFAULT \'\' NOT NULL');
             }
         }
+
         if (/* $this->isVersionBelow('0.1.9') &&*/ !$this->isEnabled('disable_links')) {
             if ( ! $this->getDbAdapterRead()->hasTable( 'cms_link' ) ) {
                 Sys_Io::out('Creating Links Table');
