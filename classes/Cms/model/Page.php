@@ -80,7 +80,7 @@ class Cms_Page_Form_Filter extends App_Form_Filter
     {
         $this->allowFiltering( array( 'pg_type_id', 'pg_title', 'pg_content', 'pg_template', 'pg_slug',
             'pg_status', 'pg_published', 'pg_comment_allow', 'pg_created_from', 'pg_created_to',
-            'pg_image', 'category', 'category_slug'
+            'pg_image', 'category', 'category_slug', 'pg_lang'
             ) );
         parent::createElements();
     }
@@ -92,7 +92,7 @@ class Cms_Page_Form_Edit extends App_Form_Edit
     {
         $this->allowEditing( array( 'pg_slug', 'pg_meta_title', 'pg_meta_keys', 'pg_meta_descr', 
             'pg_template', 'pg_brief', 'pg_title', 'pg_content', 'pg_type_id', 'pg_type_sortorder',
-            'pg_status', 'pg_published', 'pg_comment_allow', 'pg_created',
+            'pg_status', 'pg_published', 'pg_comment_allow', 'pg_created', 'pg_lang', 
             'pg_image' ) );
         parent::createElements();
 
