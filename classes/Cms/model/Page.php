@@ -92,7 +92,7 @@ class Cms_Page_Form_Edit extends App_Form_Edit
     {
         $this->allowEditing( array( 'pg_slug', 'pg_meta_title', 'pg_meta_keys', 'pg_meta_descr', 
             'pg_template', 'pg_brief', 'pg_title', 'pg_content', 'pg_type_id', 'pg_type_sortorder',
-            'pg_status', 'pg_published', 'pg_comment_allow', 'pg_created', 'pg_lang', 
+            'pg_status', 'pg_published', 'pg_comment_allow', 'pg_created', 'pg_lang',  'pg_less',
             'pg_image' ) );
         parent::createElements();
 
@@ -194,6 +194,11 @@ class Cms_Page extends DBx_Table_Row
     {
         return $this->pg_image;
     }
+    /** @return string */
+    public function getLess()
+    {
+        return $this->pg_less;
+    }
 
     /**
      * this date format is ofter required in blogs
@@ -248,7 +253,9 @@ class Cms_Page extends DBx_Table_Row
     }
 
     protected function _insert() {
+	$this->pg_created = date('Y-m-d H:i:s');
         $this->pg_modified = date('Y-m-d H:i:s');
+
         parent::_insert();
     }
 

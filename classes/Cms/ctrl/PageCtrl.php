@@ -89,6 +89,8 @@ class Cms_PageCtrl extends App_DbTableCtrl
             }
         }
         parent::editAction();
+
+	// if ( $this->_isPost() ) Sys_Debug::alert( $this->view->object );
     }
 
     public function getAction()

@@ -4,7 +4,7 @@
 
 class Cms_Update extends App_Update 
 {
-    const VERSION = '0.1.11';
+    const VERSION = '0.1.12';
 
     public static function getClassName() { return 'Cms_Update'; }
     public static function TableClass() { return self::getClassName().'_Table'; }
@@ -61,33 +61,33 @@ class Cms_Update extends App_Update
         }
 
 
-        if ( $this->isVersionBelow('0.1.5') ) {
-            $tblPage = Cms_Page::Table();
-            if ( !$tblPage->hasColumn( 'pg_brief' ) ) {
-                $tblPage->addColumn(  'pg_brief','MEDIUMTEXT NOT NULL');
-            }
+        
+        $tblPage = Cms_Page::Table();
+        if ( !$tblPage->hasColumn( 'pg_brief' ) ) {
+            Sys_Io::out( 'pg_brief' );
+            $tblPage->addColumn(  'pg_brief','MEDIUMTEXT');
         }
-
-        if ( $this->isVersionBelow('0.1.6') ) {
-            $tblPage = Cms_Page::Table();
-            if ( !$tblPage->hasColumn( 'pg_comment_allow' ) ) {
-                $tblPage->addColumn(  'pg_comment_allow','INT DEFAULT \'1\' NOT NULL');
-            }
+        
+        
+        if ( !$tblPage->hasColumn( 'pg_comment_allow' ) ) {
+            Sys_Io::out( 'pg_comment_allow' );
+            $tblPage->addColumn(  'pg_comment_allow','INT DEFAULT \'1\' NOT NULL');
         }
-        if ( $this->isVersionBelow('0.1.7') ) {
-            $tblPage = Cms_Page::Table();
-            if ( !$tblPage->hasIndex( 'i_pg_created' ) ) {
-                $tblPage->addIndex(  'i_pg_created','pg_created');
-            }
+        if ( !$tblPage->hasIndex( 'i_pg_created' ) ) {
+            Sys_Io::out( 'i_pg_created' );
+            $tblPage->addIndex(  'i_pg_created','pg_created');
         }
-        if ( $this->isVersionBelow('0.1.8') ) {
-            $tblPage = Cms_Page::Table();
-            if ( !$tblPage->hasColumn( 'pg_image' ) ) {
-                $tblPage->addColumn(  'pg_image', 'VARCHAR(200) DEFAULT \'\' NOT NULL');
-            }
+        if ( !$tblPage->hasColumn( 'pg_image' ) ) {
+            Sys_Io::out( 'pg_image' );
+            $tblPage->addColumn(  'pg_image', 'VARCHAR(200) DEFAULT \'\' NOT NULL');
         }
-
-        if (/* $this->isVersionBelow('0.1.9') &&*/ !$this->isEnabled('disable_links')) {
+        if ( !$tblPage->hasColumn( 'pg_less' ) ) {
+            Sys_Io::out( 'add LESS' );
+            $tblPage->addColumn(  'pg_less', 'TEXT' );
+        }
+        
+        
+        if ( !$this->isEnabled('disable_links')) {
             if ( ! $this->getDbAdapterRead()->hasTable( 'cms_link' ) ) {
                 Sys_Io::out('Creating Links Table');
                 $this->getDbAdapterWrite()->addTableSql('cms_link', '
@@ -118,9 +118,16 @@ class Cms_Update extends App_Update
                     $tblLinks->addColumn( 'lnk_group', 'CHAR(20) DEFAULT \'\' NOT NULL' );
                 }
                 if ( !$tblLinks->hasColumn( 'lnk_thumb' )  ) {
+                    Sys_Io::out( 'adding lnk_thumb');
                     $tblLinks->addColumn( 'lnk_thumb', 'VARCHAR(255) DEFAULT \'\' NOT NULL' );
                     $tblLinks->addColumn( 'lnk_thumb_width', 'INT DEFAULT \'-1\' NOT NULL' );
                     $tblLinks->addColumn( 'lnk_thumb_height', 'INT DEFAULT \'-1\' NOT NULL' );
+                }
+                if ( !$tblLinks->hasColumn( 'lnk_image' )  ) {
+                    Sys_Io::out( 'adding lnk_image');
+                    $tblLinks->addColumn( 'lnk_image', 'VARCHAR(255) DEFAULT \'\' NOT NULL' );
+                    $tblLinks->addColumn( 'lnk_image_width', 'INT DEFAULT \'-1\' NOT NULL' );
+                    $tblLinks->addColumn( 'lnk_image_height', 'INT DEFAULT \'-1\' NOT NULL' );
                 }
                 if ( !$tblLinks->hasColumn( 'lnk_class' )  ) {
                     Sys_Io::out('Cms: Links can have classes');
@@ -144,6 +151,7 @@ class Cms_Update extends App_Update
             Cms_Category::TableName(),
             Cms_Category_Relation::TableName(),
             Cms_Rating::TableName(),
+            Cms_Subscribe::TableName(),
         );
     }
 
@@ -327,6 +335,27 @@ class Cms_Update extends App_Update
                 $this->getDbAdapterWrite()->dropTable( 'cms_redirect' );
             }
         }
+        
+        if ( !$this->isEnabled('disable_subscribe') &&
+             !$this->getDbAdapterRead()->hasTable( 'cms_subscribe') ) {
+            Sys_Io::out('Creating Subscription Table');
+            $this->getDbAdapterWrite()->addTableSql('cms_subscribe', '
+                subscribe_id        INT NOT NULL AUTO_INCREMENT,
+                subscribe_email     VARCHAR(250) NOT NULL,
+                subscribe_first     VARCHAR(250) NOT NULL,
+                subscribe_last      VARCHAR(250) NOT NULL,
+                subscribe_dt        DATETIME     NOT NULL DEFAULT \'0000-00-00 00:00:00\',
+                subscribe_event     INT(11)      NOT NULL DEFAULT 0,
+                KEY i_subscribe_event ( subscribe_event  ),
+                KEY i_subscribe_email ( subscribe_email  ),
+                PRIMARY KEY ( subscribe_id )
+            ');
+        } else {
+            if ( $this->isEnabled('disable_subscribe') &&
+                $this->getDbAdapterRead()->hasTable( 'cms_subscribe') ) {
+                $this->getDbAdapterWrite()->dropTable( 'cms_subscribe' );
+            }
+        }        
     }
 
 }

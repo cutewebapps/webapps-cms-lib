@@ -20,6 +20,11 @@ class Cms_PageRenderHelper extends App_ViewHelper_Abstract
             $this->getView()->broker()->HeadTitle()->set( $objPage->getMetaTitle() );
             $this->getView()->broker()->HeadMeta()->addName( 'meta-keywords',    $objPage->getMetaKeys() );
             $this->getView()->broker()->HeadMeta()->addName( 'meta-description', $objPage->getMetaDescr() );
+
+            // there can be additional styling
+            if ( trim( $objPage->getLess() ) != "" )
+                $this->getView()->broker()->HeadStyle()->appendLess( $objPage->getLess() );
+                
             return $objPage->getContent();
         } else {
             throw new Cms_Page_Exception('page not found');
