@@ -7,7 +7,15 @@ class Cms_Subscribe_Table extends DBx_Table
     /** @var string */
     protected $_primary = 'subscribe_id';
 
+	public function fetchByEmail( $strEmail, $strEvent = '' ) 
+	{
+		$select = $this->select()->where( 'subscribe_email = ? ', $strEmail );
+		if ( $strEvent !== '' ) $select->where( 'subscribe_event = ?', $strEvent );
+		return $this->fetchRow( $select );
+	}
 }
+
+
 class Cms_Subscribe_Form_Filter extends App_Form_Filter
 {
     public function createElements()
