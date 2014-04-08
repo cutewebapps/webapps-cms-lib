@@ -100,10 +100,12 @@ class Cms_PageCtrl extends App_DbTableCtrl
             $tbl = Cms_Page::Table();
             $select = $tbl->select()
                         ->where( 'pg_slug = ?', $this->_getParam('pg_slug') );
+            
+            $strLangCookie =  filter_input(INPUT_COOKIE, 'lang', FILTER_SANITIZE_SPECIAL_CHARS);
             if ( $this->_getParam( 'pg_lang' ) ) {
                 $select->where( 'pg_lang = ?', $this->_getParam('pg_lang') );
-            } else if ($_COOKIE['lang']) { 
-                $select->where( 'pg_lang = ?', $_COOKIE['lang'] );
+            } else if ( $strLangCookie ) { 
+                $select->where( 'pg_lang = ?', $strLangCookie );
             }
 
             $this->view->object = $tbl->fetchRow( $select );
@@ -112,8 +114,9 @@ class Cms_PageCtrl extends App_DbTableCtrl
             parent::getAction();
         }
 
-        if ( !is_object( $this->view->object )  )
+        if ( !is_object( $this->view->object )  ) {
             throw new App_Exception_PageNotFound ( 'Page Not Found' );
+        }
 
         // page can have subpages, pages for comments, pages for images, etc ...
         $this->view->page = $this->_getParam( 'page', 1 );
