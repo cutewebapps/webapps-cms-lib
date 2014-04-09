@@ -8,6 +8,27 @@ class Cms_Page_Table extends DBx_Table
     /** @var string */
     protected $_primary = 'pg_id';
 
+    /** @return Cms_Page_List */
+    public function getPages( array $arrSlugs, $strLang = '', $strTypeId = '' ) 
+    {
+        $arrSlugsQuoted = array();	
+	foreach  ( $arrSlugs as $strSlug )  {
+		$arrSlugsQuoted[ $strSlug ] = $this->_dbRead->quote( $strSlug );
+	}
+	$strSlugs = implode( ',', $arrSlugsQuoted );
+
+	$select = $this->select()
+		->where( 'pg_slug IN ('. $strSlugs.') ');
+	if ( $strLang != '' )  {
+		$select->where( 'pg_lang = ? ', $strLang );
+        }
+	if ( $strTypeId !== '' )  {
+		$select->where( 'pg_type_id= ? ', $strTypeId );
+        }
+	return $this->fetchAll( $select );
+    }
+
+
     /** @return Cms_Page */
     public function findBySlug( $strSlug, $strLang = '', $strTypeId = '' )
     {
