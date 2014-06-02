@@ -16,7 +16,7 @@ class Cms_SubscribeCtrl extends App_DbTableCtrl {
             if (count($arrErrors) == 0) {
                 // check email is unique for this event
                 $objEmail = Cms_Subscribe::Table()->fetchByEmail($strEmail, $this->_getParam( 'subscribe_event' ) );
-                if (isset($objEmail)) {
+                if ( is_object($objEmail)) {
                     array_push($arrErrors, array(Lang_Hash::get('This email was already registered')));
                 }
             }
@@ -28,10 +28,13 @@ class Cms_SubscribeCtrl extends App_DbTableCtrl {
         }
         parent::editAction();
         
+        if ( $this->_hasParam('subscribe_message') && $this->_getParam('subscribe_message') != '' )
+            $this->view->lstMessages = array($this->_getParam('subscribe_message'));
+        
         if ( $this->_isPost() && count($arrErrors) == 0 && is_object($this->view->object) &&
-                is_object( App_Application::getInstance()->mail ) ) {
+                is_object( App_Application::getInstance()->getConfig()->mail ) ) {
             
-            $objConfig = App_Application::getInstance()->mail->subscribe;
+            $objConfig = App_Application::getInstance()->getConfig()->mail->subscribe;
             if ( is_object( $objConfig )) {
                 // send mail about subscription (if configured)
                 $mail = new App_Mail_Subscription();

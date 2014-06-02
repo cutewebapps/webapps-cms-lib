@@ -98,16 +98,18 @@ class Cms_PageCtrl extends App_DbTableCtrl
     {
 
         if ( $this->_getParam( 'pg_slug' ) ) {
-
             $tbl = Cms_Page::Table();
             $select = $tbl->select()
                         ->where( 'pg_slug = ?', $this->_getParam('pg_slug') );
+
+            
+            $strLangCookie = filter_input(INPUT_COOKIE, 'lang', FILTER_SANITIZE_SPECIAL_CHARS);
             if ( $this->_getParam( 'pg_lang' ) ) {
                 $select->where( 'pg_lang = ?', $this->_getParam('pg_lang') );
             } else if ( $this->_getParam( 'lang' ) ) {
                 $select->where( 'pg_lang = ?', $this->_getParam('lang') );
-            } else if ( isset( $_COOKIE['lang']) ) {
-                $select->where( 'pg_lang = ?', $_COOKIE['lang'] );
+            } else if ( $strLangCookie ) { 
+                $select->where( 'pg_lang = ?', $strLangCookie );
             }
 
             $this->view->object = $tbl->fetchRow( $select );
