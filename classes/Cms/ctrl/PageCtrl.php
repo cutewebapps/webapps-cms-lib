@@ -2,7 +2,8 @@
 
 class Cms_PageCtrl extends App_DbTableCtrl
 {
-    protected function  _filterField($strFieldName, $strFieldValue) {
+    protected function  _filterField($strFieldName, $strFieldValue) 
+    {
         switch( $strFieldName ) {
             case 'pg_created_from':
                 $dt = date('Y-m-d H:i:s', strtotime( $strFieldValue ) );
@@ -101,8 +102,13 @@ class Cms_PageCtrl extends App_DbTableCtrl
             $tbl = Cms_Page::Table();
             $select = $tbl->select()
                         ->where( 'pg_slug = ?', $this->_getParam('pg_slug') );
-            if ( $this->_getParam( 'pg_lang' ) )
+            if ( $this->_getParam( 'pg_lang' ) ) {
                 $select->where( 'pg_lang = ?', $this->_getParam('pg_lang') );
+            } else if ( $this->_getParam( 'lang' ) ) {
+                $select->where( 'pg_lang = ?', $this->_getParam('lang') );
+            } else if ( isset( $_COOKIE['lang']) ) {
+                $select->where( 'pg_lang = ?', $_COOKIE['lang'] );
+            }
 
             $this->view->object = $tbl->fetchRow( $select );
 
@@ -110,8 +116,9 @@ class Cms_PageCtrl extends App_DbTableCtrl
             parent::getAction();
         }
 
-        if ( !is_object( $this->view->object )  )
-            throw new App_Exception_PageNotFound ( 'Page Not Found' );
+        if ( !is_object( $this->view->object )  ) {
+            throw new App_Exception_PageNotFound ( Lang_Hash::get( 'Page Not Found' ) );
+        }
 
         // page can have subpages, pages for comments, pages for images, etc ...
         $this->view->page = $this->_getParam( 'page', 1 );

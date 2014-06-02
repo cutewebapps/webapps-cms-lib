@@ -97,6 +97,13 @@ class Cms_Page_Form_Edit extends App_Form_Edit
         parent::createElements();
 
     }
+    /**
+     * @return string
+     */
+    public function getObjectName()
+    {                  
+	return Lang_Hash::get( 'Page' );
+    }
 }
 
 class Cms_Page_List extends DBx_Table_Rowset
