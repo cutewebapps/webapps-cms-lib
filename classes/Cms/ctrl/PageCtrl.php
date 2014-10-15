@@ -93,6 +93,28 @@ class Cms_PageCtrl extends App_DbTableCtrl
 
 	// if ( $this->_isPost() ) Sys_Debug::alert( $this->view->object );
     }
+    
+    public function submitAction()
+    {
+        $objConfigCms = App_Application::getInstance()->getConfig()->cms;
+        if ( !is_object( $objConfigCms ) || ! $objConfigCms->enable_submit ) {
+            throw new App_Exception( 'Submission to CMS is not enabled' );
+        }
+        
+        // $strLog = new Sys_File( $objConfigCms->log_submission );? add a kind of logging
+        parent::editAction();
+        
+        if ( is_object( $this->view->object) ) {
+            foreach ( $this->_getAllFiles() as $strIndex => $arrFile ) {
+                // attach a reference of an image to the post
+                $sBaseName = mt_rand(100000,999999).'-'.$arrFile['name'];
+                
+                $this->_saveUploaded( $strIndex, CWA_APPLICATION_DIR.'/cdn/upload/'.date('Y').'/'.$sBaseName );
+                $this->view->object->pg_content .= '<img src="'.'/cdn/upload/'.date('Y').'/'.$sBaseName.'" alt="" />';
+                $this->view->object->save( false );
+            }
+        }
+    }    
 
     public function getAction()
     {
