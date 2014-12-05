@@ -146,6 +146,7 @@ class Cms_Update extends App_Update
     {
         return array(
             Cms_Page::TableName(),
+            Cms_Page_Image::TableName(),
             Cms_Comment::TableName(),
             Cms_Bookmark::TableName(),
             Cms_Category::TableName(),
@@ -356,6 +357,32 @@ class Cms_Update extends App_Update
                 $this->getDbAdapterWrite()->dropTable( 'cms_subscribe' );
             }
         }        
+        
+        
+         if ( !$this->isEnabled('disable_page_images') &&
+             !$this->getDbAdapterRead()->hasTable( 'cms_page_image') ) {
+            Sys_Io::out('Creating Page Image Table');
+            $this->getDbAdapterWrite()->addTableSql('cms_page_image', '
+                img_id          INT NOT NULL AUTO_INCREMENT,
+                img_page_id     INT NOT NULL,          
+                img_type        VARCHAR(100) NOT NULL DEFAULT \'original\',
+                img_sortorder   INT NOT NULL DEFAULT 0,
+                img_group       VARCHAR(100) NOT NULL,
+                img_path        VARCHAR(100) NOT NULL DEFAULT \'\',
+                img_width       INT NOT NULL DEFAULT -1,
+                img_height      INT NOT NULL DEFAULT -1,
+
+                KEY i_img_group ( img_group  ),
+                KEY i_img_page_id ( img_page_id  ),
+                KEY i_img_type ( img_type ),
+                PRIMARY KEY ( img_id )
+            ');
+        } else {
+            if ( $this->isEnabled('disable_page_images') &&
+                $this->getDbAdapterRead()->hasTable( 'cms_page_image') ) {
+                $this->getDbAdapterWrite()->dropTable( 'cms_page_image' );
+            }
+        }      
     }
 
 }
